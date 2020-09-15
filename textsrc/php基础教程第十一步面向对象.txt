@@ -1,0 +1,168 @@
+面相对象
+面向对象程序设计简称OOP（Object-oriented programming）。是一种类型的抽象，或者说是一种类型以编码的方式进行描述。概念上理解并不能直观的说明问题，以下将会有示例为读者直观的感受面向对象。
+
+类代表一个类别，例如人、车子、动物、液体都属于一个类，在php中我们用class表示一个类。
+对象指这一个类的实例化，例如人这一个类，有一个具体，如小明是一个人类，小明就是这一个类别的具体；动物也是一个类，对象可以为猴子，猩猩，马等；液体也是一个类，水属于液体这一个类别，牛奶也属于液体这一个类别。
+成员函数一般指这一个类中的一些属性，例如人这个类别，有年龄、身高、性别、头发等这一些属性；液体有颜色、密度等属性。
+子类指一个父类的派生，也就是人这一个类属于动物，动物这一个类别就是人类的父类，人类这一个类别指动物的子类。
+父类是一个类的父亲，以上以说明。
+类方法可以指类里面的一些接口动作，例如人可以吃饭、人可以走路等。
+
+一个最为简单的面向对象示例
+接下来看一下一个简单的类定义：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+}
+?>
+以上使用class 这个关键字定义了一个Human类，Human是一个类的名称，就跟函数名称一样可以自己设置，Human的意思为人，这里定义的是一个人的类别。人的属性有名字和年龄，在类名后的花括号中，编写了 public $sex; 与 public $hair;方法，public 是对变量以及方法的修饰，表示这个变量或者方法是公开的。就像你的性别，外人可以从外貌上分表你是男是女，这些属性是公开的，可以使用public进行修饰。除了public方法可以修饰公开的属性或者方法外，还可以使用private 修饰一些私有的方法，例如你的胃消化的方法，只有你自己可以调用，外人是使用不了，这个方法可以使用private进行修饰（当然，这个比喻并不是很好的说明这个问题，接下来将会用示例进行说明）。
+以下示例将Human这个类进行实例化：
+
+$Xiaoming=new Human();
+这个时候只是实例化了这个类，$Xiaoming 就是Human这个类的对象。我们可以为这个对象设置值。设置值需要添加一些方法：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+  
+  public function set_Sex($val){
+	  $this->sex=$val;
+  }
+  public function set_Hair($val){
+	  $this->hair=$val;
+  }
+}
+
+$Xiaoming=new Human();
+?>
+以上代码中 public function set_Sex 定义了一个函数，函数名为 set_Sex，使用了public进行修饰，表示这个函数可以直接调用；这个函数接收一个参数，参数名为 $val。在set_Sex 函数的花括号中，代码为 $this->sex=$val;，$this为当前对象，指当前类，->表示一个指向，$this->sex就为当前类中的sex成员属性（变量），赋值为传入的$val。另外一个函数 set_Hair 与 set_Sex 函数形式一致，不再赘述。
+接下来看如何调用这两个方法进行值的设定：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+  
+  public function set_Sex($val){
+	  $this->sex=$val;
+  }
+  public function set_Hair($val){
+	  $this->hair=$val;
+  }
+}
+
+$Xiaoming=new Human();
+$Xiaoming->set_Sex('nan');
+$Xiaoming->set_Hair('y');
+?>
+以上代码中使用对象 $Xiaoming 用箭头-> 运算符调用 set_Sex 函数，并且传入了一个值为 nan（男女的拼音）：$Xiaoming->set_Sex('nan');，set_Hair 函数的调用方法一致。
+接下来新建两个方法。使用这两个方法调用变量，查看是否更改：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+  
+  public function set_Sex($val){
+	  $this->sex=$val;
+  }
+  public function set_Hair($val){
+	  $this->hair=$val;
+  }
+  
+  public function get_Sex(){
+	  return $this->sex;
+  }
+  
+  public function get_Hair(){
+	  return $this->hair;
+  }
+}
+
+$Xiaoming=new Human();
+$Xiaoming->set_Sex('nan');
+$Xiaoming->set_Hair('y');
+
+echo $Xiaoming->get_Sex();
+echo ' ';
+echo $Xiaoming->get_Hair();
+?>
+以上代码中，使用 get_Sex() 方法获取性别，使用 get_Hair 获取是否有头发。在函数内使用return 返回了 $this->sex 的值。$this->sex 表示当前对象中的sex 成员属性。随后使用echo 进行输出。
+结果如下：
+在这里插入图片描述
+
+private
+我们可以在类中修改 set_Sex 的修饰public 为 private，使用 private 后外部调用将会报错：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+  
+  private function set_Sex($val){
+	  $this->sex=$val;
+  }
+  public function set_Hair($val){
+	  $this->hair=$val;
+  }
+  
+  public function get_Sex(){
+	  return $this->sex;
+  }
+  
+  public function get_Hair(){
+	  return $this->hair;
+  }
+}
+
+$Xiaoming=new Human();
+$Xiaoming->set_Sex('nan');
+$Xiaoming->set_Hair('y');
+
+echo $Xiaoming->get_Sex();
+echo ' ';
+echo $Xiaoming->get_Hair();
+?>
+运行报错如下：
+在这里插入图片描述
+但是在类内部中是可以调用的，在以下示例中，新建了一个 printInfo 函数，使用private 进行修饰，在外部调用不了，但是在内部还是可以调用的：修改一下查看示例：
+
+<?php
+class Human {
+  public $sex;
+  public $hair;
+  
+  private function printInfo($val){
+	  echo '传入的值是 '.$val.'<br/>';
+  }
+  public function set_Sex($val){
+	  $this->printInfo($val);
+	  $this->sex=$val;
+  }
+  public function set_Hair($val){
+	  $this->hair=$val;
+  }
+  
+  public function get_Sex(){
+	  return $this->sex;
+  }
+  
+  public function get_Hair(){
+	  return $this->hair;
+  }
+}
+
+$Xiaoming=new Human();
+$Xiaoming->set_Sex('nan');
+$Xiaoming->set_Hair('y');
+
+echo $Xiaoming->get_Sex();
+echo ' ';
+echo $Xiaoming->get_Hair();
+?>
+在 printInfo 函数中，传入了一个 $val 参数，随后输出了这个参数。 printInfo 方法调用在 set_Sex 方法中，传入了 $val，用 printInfo 作为提示。
+结果如下：
+在这里插入图片描述
